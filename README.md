@@ -19,46 +19,80 @@ odds, set alerts, journal everything and route orders - paper by default, live o
 
 ## Get started
 
-**1. Install** - pick one:
+You need two things: **Python** (free, from [python.org](https://www.python.org/downloads/), version 3.9 or newer) and an
+AI assistant that can run tools, such as Claude, Codex, Cursor or Gemini CLI. Nothing else is installed or paid for.
+
+### 1. Install: pick the easiest option for you
+
+**Option A - let your AI do it (easiest, no typing commands).** Open your AI assistant and paste this:
+
+```text
+Install the trading skills from https://github.com/reddygopalkrishna/trading-skills into my assistant,
+then set them up with a 50,000 USD practice (paper) account, benchmark SPY and 1% risk per trade.
+Do not place any real orders.
+```
+
+**Option B - Claude Code (one line each):**
 
 ```bash
-# Claude Code (plugin marketplace)
 /plugin marketplace add reddygopalkrishna/trading-skills
 /plugin install trading-skills@trading-skills
+```
 
-# Any agent via skills.sh (Claude Code, Codex, Cursor, Gemini CLI and more)
+**Option C - any AI tool, via skills.sh:**
+
+```bash
 npx skills add reddygopalkrishna/trading-skills
+```
 
-# Manual
+**Option D - claude.ai or the Claude desktop app:** download the `.skill` files from the
+[latest release](https://github.com/reddygopalkrishna/trading-skills/releases) and upload them under
+*Customize -> Skills* (code execution must be enabled).
+
+**Option E - manual copy (for developers):**
+
+```bash
 git clone https://github.com/reddygopalkrishna/trading-skills
 cp -r trading-skills/skills/* ~/.claude/skills/     # or ~/.codex/skills, ~/.cursor/skills, ~/.gemini/skills
 ```
 
-claude.ai and the Claude desktop app: download the `.skill` files from the
-[latest release](https://github.com/reddygopalkrishna/trading-skills/releases) and upload them under
-*Customize -> Skills* (code execution must be enabled). Requires Python 3.9+. Nothing to `pip install`.
+### 2. Configure: tell it about your money
 
-**2. Configure** - tell it your account, or run this yourself:
+Configuration is a short set of answers saved on your own computer, in a file called `config.json` inside
+`~/.trading-skills/`. Nothing is sent anywhere. You can set it by asking your AI in plain words, or run it yourself:
 
 ```bash
 cd skills/trading-setup
-python3 scripts/setup.py doctor                                             # check your machine
+python3 scripts/setup.py doctor                                             # checks that everything works
 python3 scripts/setup.py init --equity 50000 --currency USD --benchmark SPY  # your account and market
 ```
+
+What the answers mean:
+
+| setting | plain meaning | examples |
+|---|---|---|
+| `--equity` | how much money the account has, used only for sizing | `50000` |
+| `--currency` | the money you use | `USD`, `INR`, `GBP` |
+| `--benchmark` | the market index you compare with | `SPY` (US), `^NSEI` (India Nifty 50), `^FTSE` (UK) |
+| `--risk-pct` | the most you are willing to lose on one trade, as a percentage of the account | `1` (1%) |
+| broker | `paper` (default) means practice money. A live broker is off until you switch it on yourself | `paper` |
+
+**Practice first.** Everything starts on paper trading: fake money, real prices. Real orders need a separate,
+deliberate switch and your confirmation on every order.
 
 Then ask your agent things like:
 
 ```text
 "Set up trading-skills: 50,000 USD account, benchmark SPY, risk 1% per trade."
 "How's the market?"                          "Analyze AAPL - daily and weekly."
-"Find stocks in my watchlist near 52-week highs on rising volume."
-"Is NVDA forming a VCP or a flag?"           "Plan a long in MSFT with a 2 ATR stop."
+"Any news on RELIANCE.NS today?"             "How were TCS's last results?"
+"Watch INFY for an opening-range breakout."  "Plan a long in MSFT with a 2 ATR stop."
 "Backtest buying RSI(2) < 10 above the 200-day on these 20 stocks since 2012, out-of-sample from 2021."
 "What are the odds my 2R target hits before the stop?"
 "Paper-buy it."                               "Review my trades this month."
 ```
 
-Or run any skill directly:
+Or run any skill yourself from a terminal:
 
 ```bash
 cd skills/trading-chart && python3 scripts/analyze.py AAPL
